@@ -1,0 +1,14 @@
+# Build directories and output files
+build/
+Debug/
+*.elf
+*.bin
+*.map
+*.hex
+*.list
+
+# IDE specific files
+.settings/
+*.launch
+*.cproject
+*.project
