@@ -1,0 +1,61 @@
+#include "uart_comm.h"
+
+extern uint8_t receivedData;
+extern osSemaphoreId_t uartSemaphore;
+
+void USART2_IRQHandler(void)
+{
+    if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE)) {
+        // Read the received data
+        receivedData = (uint8_t)(huart2.Instance->DR & (uint8_t)0x00FF);
+
+        // Release the semaphore to notify the task
+        if (osSemaphoreAcquire(uartSemaphore, osWaitForever) == osOK) {
+            osSemaphoreRelease(uartSemaphore);
+        }
+
+        // Clear the RXNE flag
+        __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_RXNE);
+    }
+}
+
+void UART_Transmit(uint8_t data)
+{
+    while (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_TXE) == RESET) {}
+    huart2.Instance->DR = data;
+}
+
+
+osSemaphoreId_t uartSemaphore;
+const osSemaphoreAttr_t uartSemaphoreAttributes = {
+    .name = "uartSemaphore"
+};
+
+uint8_t receivedData = 0;
+
+void LED_Task(void *argument)
+{
+    while (1) {
+        if (osSemaphoreAcquire(uartSemaphore, osWaitForever) == osOK) {
+            if (receivedData == 0) {
+                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET); // Turn off LED
+            } else if (receivedData == 1) {
+                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET); // Turn on LED
+            }
+            osSemaphoreRelease(uartSemaphore);
+        }
+    }
+}
+
+void USART_Example()
+{
+    // Create the UART semaphore
+    uartSemaphore = osSemaphoreNew(1, 1, &uartSemaphoreAttributes);
+    if (uartSemaphore == NULL) {
+        Error_Handler();
+    }
+
+    // Create the LED task
+    osThreadNew(LED_Task, NULL, NULL);
+}
+

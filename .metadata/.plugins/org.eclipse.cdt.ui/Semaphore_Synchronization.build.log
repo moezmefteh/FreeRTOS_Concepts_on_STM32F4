@@ -1,0 +1,10 @@
+11:25:18 **** Incremental Build of configuration Debug for project Semaphore_Synchronization ****
+make -j8 all 
+arm-none-eabi-size  Semaphore_Synchronization.elf 
+   text	   data	    bss	    dec	    hex	filename
+  22024	     92	  20884	  43000	   a7f8	Semaphore_Synchronization.elf
+Finished building: default.size.stdout
+ 
+
+11:25:18 Build Finished. 0 errors, 0 warnings. (took 64ms)
+

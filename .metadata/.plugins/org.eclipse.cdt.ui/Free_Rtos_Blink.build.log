@@ -1,0 +1,10 @@
+14:58:22 **** Incremental Build of configuration Debug for project Free_Rtos_Blink ****
+make -j8 all 
+arm-none-eabi-size  Free_Rtos_Blink.elf 
+   text	   data	    bss	    dec	    hex	filename
+  19480	     96	  20896	  40472	   9e18	Free_Rtos_Blink.elf
+Finished building: default.size.stdout
+ 
+
+14:58:23 Build Finished. 0 errors, 0 warnings. (took 123ms)
+

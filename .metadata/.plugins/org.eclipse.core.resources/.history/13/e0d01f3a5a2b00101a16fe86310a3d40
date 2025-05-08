@@ -1,0 +1,27 @@
+#include "uart_comm.h"
+#include "main.h"
+
+extern uint8_t receivedData;
+extern osSemaphoreId_t uartSemaphore;
+
+void USART2_IRQHandler(void)
+{
+    if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE)) {
+        // Read the received data
+        receivedData = (uint8_t)(huart2.Instance->DR & (uint8_t)0x00FF);
+
+        // Release the semaphore to notify the task
+        if (osSemaphoreAcquire(uartSemaphore, osWaitForever) == osOK) {
+            osSemaphoreRelease(uartSemaphore);
+        }
+
+        // Clear the RXNE flag
+        __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_RXNE);
+    }
+}
+
+void UART_Transmit(uint8_t data)
+{
+    while (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_TXE) == RESET) {}
+    huart2.Instance->DR = data;
+}

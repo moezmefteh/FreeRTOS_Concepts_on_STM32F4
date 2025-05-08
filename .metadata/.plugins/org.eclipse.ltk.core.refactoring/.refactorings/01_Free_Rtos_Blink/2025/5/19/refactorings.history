@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move &apos;README.md&apos; to &apos;Free_Rtos_Blink&apos;" description="Move &apos;README.md&apos; to &apos;Free_Rtos_Blink&apos;" destination="/Free_Rtos_Blink" element1="Core/README.md" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1746538161984" updateReferences="true"/>
+</session>

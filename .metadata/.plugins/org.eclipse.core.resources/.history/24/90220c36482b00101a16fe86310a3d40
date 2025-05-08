@@ -1,0 +1,53 @@
+#include "semaphore_sync.h"
+
+osSemaphoreId_t ledSemaphore;
+const osSemaphoreAttr_t ledSemaphoreAttributes = {
+    .name = "LED_Semaphore"
+};
+
+void MX_GPIO_Init(void)
+{
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+}
+
+void LED_Task(void *argument)
+{
+    uint16_t pin = (uint16_t)argument;
+
+    while (1)
+    {
+        // Try to acquire the semaphore (non-blocking)
+        if (osSemaphoreAcquire(ledSemaphore, osWaitForever) == osOK)
+        {
+            // Toggle the specified LED
+            HAL_GPIO_TogglePin(GPIOD, pin);
+            osDelay(500);  // Simulate work
+            HAL_GPIO_TogglePin(GPIOD, pin);
+            osSemaphoreRelease(ledSemaphore);
+            osDelay(1000); // Rest before next attempt
+        }
+    }
+}
+
+void SemaphoreCountingExampleInit(void)
+{
+    // Create a counting semaphore with a maximum count of 2 and an initial count of 2
+    ledSemaphore = osSemaphoreNew(2, 2, &ledSemaphoreAttributes);
+    if (ledSemaphore == NULL)
+    {
+        Error_Handler();
+    }
+
+    // Create tasks for each LED
+    osThreadNew(LED_Task, (void*)GPIO_PIN_12, NULL);
+    osThreadNew(LED_Task, (void*)GPIO_PIN_13, NULL);
+    osThreadNew(LED_Task, (void*)GPIO_PIN_14, NULL);
+    osThreadNew(LED_Task, (void*)GPIO_PIN_15, NULL);
+}
+

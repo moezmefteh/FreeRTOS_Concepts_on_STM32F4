@@ -1,0 +1,18 @@
+#include "main.h"
+#include "semaphore_sync.h"
+#include "cmsis_os.h"
+
+void SystemClock_Config(void);
+
+int main(void)
+{
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+
+    osKernelInitialize();
+    SemaphoreExampleInit();
+    osKernelStart();
+
+    while (1);
+}

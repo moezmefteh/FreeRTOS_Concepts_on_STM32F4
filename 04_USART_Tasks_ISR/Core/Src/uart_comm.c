@@ -1,0 +1,64 @@
+#include "uart_comm.h"
+#include "main.h"
+
+extern uint8_t receivedData;
+extern osSemaphoreId_t uartSemaphore;
+extern USART_HandleTypeDef husart2; // Ensure this is declared if not already in main.h
+
+/* UART Interrupt Handler */
+void USART2_IRQHandler(void)
+{
+    if (__HAL_USART_GET_FLAG(&husart2, USART_FLAG_RXNE)) { // Use husart2 here
+        // Read the received data
+        receivedData = (uint8_t)(husart2.Instance->DR & (uint8_t)0x00FF);
+
+        // Notify the task by releasing the semaphore
+        osSemaphoreRelease(uartSemaphore);
+
+        // Clear the RXNE flag
+        __HAL_USART_CLEAR_FLAG(&husart2, USART_FLAG_RXNE); // Use husart2 here
+    }
+}
+
+/* UART Transmit function */
+void UART_Transmit(uint8_t data)
+{
+    while (__HAL_USART_GET_FLAG(&husart2, USART_FLAG_TXE) == RESET) {} // Use husart2 here
+    husart2.Instance->DR = data; // Use husart2 here
+}
+
+osSemaphoreId_t uartSemaphore;
+const osSemaphoreAttr_t uartSemaphoreAttributes = {
+    .name = "uartSemaphore"
+};
+
+uint8_t receivedData = 0;
+
+/* LED Task to handle received data */
+void LED_Task(void *argument)
+{
+    while (1) {
+        // Wait until the semaphore is available
+        if (osSemaphoreAcquire(uartSemaphore, osWaitForever) == osOK) {
+            // Handle the received data
+            if (receivedData == 0) {
+                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET); // Turn off LED
+            } else if (receivedData == 1) {
+                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET); // Turn on LED
+            }
+        }
+    }
+}
+
+/* USART Initialization and Semaphore creation */
+void USART_Example()
+{
+    // Create the UART semaphore
+    uartSemaphore = osSemaphoreNew(1, 0, &uartSemaphoreAttributes);  // Initially locked (0)
+    if (uartSemaphore == NULL) {
+        Error_Handler();
+    }
+
+    // Create the LED task
+    osThreadNew(LED_Task, NULL, NULL);
+}

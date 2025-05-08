@@ -1,0 +1,52 @@
+#include "semaphore_sync.h"
+
+osSemaphoreId_t gpioSemaphore;
+const osSemaphoreAttr_t gpioSemaphoreAttributes = {
+    .name = "gpioSemaphore"
+};
+
+void LED_Toggle_Task(void *argument)
+{
+    while (1)
+    {
+        if (osSemaphoreAcquire(gpioSemaphore, osWaitForever) == osOK)
+        {
+            // Toggle LED on PD12
+            HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+            osDelay(500); // Simulate some processing time
+            osSemaphoreRelease(gpioSemaphore);
+        }
+        osDelay(100);
+    }
+}
+
+void GPIO_Read_Task(void *argument)
+{
+    while (1)
+    {
+        if (osSemaphoreAcquire(gpioSemaphore, osWaitForever) == osOK)
+        {
+            // Read the current state of the LED
+            GPIO_PinState state = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
+            if (state == GPIO_PIN_SET)
+            {
+                // Simulate some processing
+                HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+            }
+            osSemaphoreRelease(gpioSemaphore);
+        }
+        osDelay(300);
+    }
+}
+
+void SemaphoreProtectionInit(void)
+{
+    gpioSemaphore = osSemaphoreNew(1, 1, &gpioSemaphoreAttributes);
+    if (gpioSemaphore == NULL)
+    {
+        Error_Handler();
+    }
+
+    osThreadNew(LED_Toggle_Task, NULL, NULL);
+    osThreadNew(GPIO_Read_Task, NULL, NULL);
+}

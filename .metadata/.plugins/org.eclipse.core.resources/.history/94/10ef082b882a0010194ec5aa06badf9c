@@ -1,0 +1,7 @@
+#ifndef INC_SEMAPHORE_EXAMPLE_H_
+#define INC_SEMAPHORE_EXAMPLE_H_
+
+void task1(void *argument);
+void task2(void *argument);
+
+#endif /* INC_SEMAPHORE_EXAMPLE_H_ */
