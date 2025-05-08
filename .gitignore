@@ -12,3 +12,4 @@ Debug/
 *.launch
 *.cproject
 *.project
+.metadata/
