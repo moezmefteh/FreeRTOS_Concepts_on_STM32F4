@@ -39,6 +39,65 @@ void MutexExampleInit(void) {
     osThreadNew(WriterTask, NULL, NULL);
     osThreadNew(ReaderTask, NULL, NULL);
 }
+/*
+int counter = 0;
+osMutexId_t counterMutex;
+const osMutexAttr_t counterMutexAttributes = {
+    .name = "counterMutex"
+};
+
+void Increment_Task(void *argument)
+{
+    while (1)
+    {
+        if (osMutexAcquire(counterMutex, osWaitForever) == osOK)
+        {
+            counter++;
+            osMutexRelease(counterMutex);
+            osDelay(500);
+        }
+    }
+}
+
+void Decrement_Task(void *argument)
+{
+    while (1)
+    {
+        if (osMutexAcquire(counterMutex, osWaitForever) == osOK)
+        {
+            counter--;
+            osMutexRelease(counterMutex);
+            osDelay(500);
+        }
+    }
+}
+
+void Read_Task(void *argument)
+{
+    while (1)
+    {
+        if (osMutexAcquire(counterMutex, osWaitForever) == osOK)
+        {
+            printf("Counter value: %d\n", counter);
+            osMutexRelease(counterMutex);
+            osDelay(1000);
+        }
+    }
+}
+
+void MutexExampleInit(void)
+{
+    counterMutex = osMutexNew(&counterMutexAttributes);
+    if (counterMutex == NULL)
+    {
+        Error_Handler();
+    }
+
+    osThreadNew(Increment_Task, NULL, NULL);
+    osThreadNew(Decrement_Task, NULL, NULL);
+    osThreadNew(Read_Task, NULL, NULL);
+}
+*/
 
 void MX_GPIO_Init(void)
 {
