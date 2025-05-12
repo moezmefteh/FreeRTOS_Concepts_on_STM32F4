@@ -52,6 +52,7 @@ const osThreadAttr_t defaultTask_attributes = {
 };
 /* USER CODE BEGIN PV */
 uint8_t rcvByte;
+int x,y;
 osThreadId_t LedTaskHandle;
 const osThreadAttr_t LedTask_attributes = {
   .name = "LedTask",
@@ -269,19 +270,32 @@ void LedTask(void *argument)
 
   for(;;)
   {
+      // Wait for the flag set by the UART interrupt
+	  x++;
+      osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
+
 	  if(rcvByte=='1'){
 		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, 1);
 	  }
 	  else if(rcvByte=='0'){
 		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, 0);
 	  }
-
   }
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	  HAL_UART_Receive_IT(&huart2, &rcvByte, 1);
+void vApplicationIdleHook(void) {
+	y++;
+}
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+    if (huart->Instance == USART2)
+    {
+        // Set a flag to wake up the LedTask
+        osThreadFlagsSet(LedTaskHandle, 0x01);
+
+        // Re-enable UART interrupt for the next byte
+        HAL_UART_Receive_IT(&huart2, &rcvByte, 1);
+    }
 }
 
 
