@@ -17,36 +17,47 @@ void MX_GPIO_Init(void)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 }
 
-void LED_Toggle_Task(void *argument)
+void StartTask1(void *argument)
 {
     while (1)
     {
+        // Read state of PD12 (no need for semaphore here, reading is safe)
+        GPIO_PinState state = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_14);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, state);
+
+        // Acquire semaphore for shared PD14 toggle
         if (osSemaphoreAcquire(gpioSemaphore, osWaitForever) == osOK)
         {
-            // Toggle LED on PD12
-            HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-            osDelay(500); // Simulate some processing time
+            HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+            osSemaphoreRelease(gpioSemaphore);
         }
+
+        osDelay(500);
     }
 }
 
-void GPIO_Read_Task(void *argument)
+void StartTask2(void *argument)
 {
     while (1)
     {
-        // Read the current state of PD12 and reflect it on PD13
-        GPIO_PinState state = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
-        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, state);
+        // Read state of PD12 (no need for semaphore here, reading is safe)
+        GPIO_PinState state = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_14);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, state);
 
-        // Now release the semaphore to allow the toggle task to proceed
-        osSemaphoreRelease(gpioSemaphore);
+        // Acquire semaphore for shared PD14 toggle
+        if (osSemaphoreAcquire(gpioSemaphore, osWaitForever) == osOK)
+        {
+            HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+            osSemaphoreRelease(gpioSemaphore);
+        }
 
-        osDelay(100);  // Add a small delay to avoid CPU hogging
+        osDelay(5000);
     }
 }
 
 void SemaphoreProtectionInit(void)
 {
+    // Create a binary semaphore to protect the shared GPIO
     gpioSemaphore = osSemaphoreNew(1, 1, &gpioSemaphoreAttributes);
     if (gpioSemaphore == NULL)
     {
@@ -54,6 +65,6 @@ void SemaphoreProtectionInit(void)
     }
 
     // Create the tasks
-    osThreadNew(LED_Toggle_Task, NULL, NULL);
-    osThreadNew(GPIO_Read_Task, NULL, NULL);
+    osThreadNew(StartTask1, NULL, NULL);
+    osThreadNew(StartTask2, NULL, NULL);
 }
