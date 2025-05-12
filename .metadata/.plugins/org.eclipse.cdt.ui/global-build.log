@@ -1,21 +1,22 @@
-16:27:48 **** Incremental Build of configuration Debug for project 04_USART_Tasks_ISR ****
+10:33:27 **** Incremental Build of configuration Debug for project 01_Blink_Task ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/uart_comm.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/uart_comm.d" -MT"Core/Src/uart_comm.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/uart_comm.o"
-arm-none-eabi-gcc -o "04_USART_Tasks_ISR.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/moez.meftah@celadodc-rswl.com/STM32CubeIDE/workspace_1.18.1/04_USART_Tasks_ISR/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="04_USART_Tasks_ISR.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: 04_USART_Tasks_ISR.elf
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/tasks.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/tasks.d" -MT"Core/Src/tasks.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/tasks.o"
+arm-none-eabi-gcc -o "01_Blink_Task.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/moez.meftah@celadodc-rswl.com/STM32CubeIDE/workspace_1.18.1/01_Blink_Task/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="01_Blink_Task.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: 01_Blink_Task.elf
  
-arm-none-eabi-size  04_USART_Tasks_ISR.elf 
-arm-none-eabi-objdump -h -S 04_USART_Tasks_ISR.elf  > "04_USART_Tasks_ISR.list"
+arm-none-eabi-size  01_Blink_Task.elf 
+arm-none-eabi-objdump -h -S 01_Blink_Task.elf  > "01_Blink_Task.list"
    text	   data	    bss	    dec	    hex	filename
-  23736	     96	  20960	  44792	   aef8	04_USART_Tasks_ISR.elf
+  19416	     96	  20896	  40408	   9dd8	01_Blink_Task.elf
 Finished building: default.size.stdout
  
-Finished building: 04_USART_Tasks_ISR.list
+Finished building: 01_Blink_Task.list
  
-16:27:50 **** Incremental Build of configuration Debug for project 04_USART_Tasks_ISR ****
+10:33:31 **** Incremental Build of configuration Debug for project 01_Blink_Task ****
 make -j8 all 
-arm-none-eabi-size  04_USART_Tasks_ISR.elf 
+arm-none-eabi-size  01_Blink_Task.elf 
    text	   data	    bss	    dec	    hex	filename
-  23736	     96	  20960	  44792	   aef8	04_USART_Tasks_ISR.elf
+  19416	     96	  20896	  40408	   9dd8	01_Blink_Task.elf
 Finished building: default.size.stdout
  
