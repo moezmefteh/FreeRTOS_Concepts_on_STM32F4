@@ -86,6 +86,10 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  /* Enable the UART interrupt */
+  __HAL_USART_ENABLE_IT(&husart2, USART_IT_RXNE);
+  HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
 
   /* USER CODE END Init */
 

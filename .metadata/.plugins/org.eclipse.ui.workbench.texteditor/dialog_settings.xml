@@ -3,6 +3,8 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="HAL_NVIC_EnableIRQ"/>
+		<item value="usart2"/>
 		<item value="SystemClock_Config"/>
 	</list>
 </section>

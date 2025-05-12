@@ -38,17 +38,18 @@ uint8_t receivedData = 0;
 void LED_Task(void *argument)
 {
     while (1) {
-        // Wait until the semaphore is available
         if (osSemaphoreAcquire(uartSemaphore, osWaitForever) == osOK) {
-            // Handle the received data
-            if (receivedData == 0) {
-                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET); // Turn off LED
-            } else if (receivedData == 1) {
-                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET); // Turn on LED
+            if (receivedData == '1') {
+                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+            } else if (receivedData == '0') {
+                HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
             }
+            // Debug print
+            UART_Transmit(receivedData);  // Echo back the received data
         }
     }
 }
+
 
 /* USART Initialization and Semaphore creation */
 void USART_Example()
