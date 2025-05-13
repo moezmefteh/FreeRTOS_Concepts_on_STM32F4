@@ -1,10 +1,27 @@
-16:21:22 **** Incremental Build of configuration Debug for project 04_Mutex_Data_Consistency ****
+09:46:14 **** Incremental Build of configuration Debug for project 04_Mutex_Data_Consistency ****
 make -j8 all 
-arm-none-eabi-size  04_Mutex_Data_Consistency.elf 
-   text	   data	    bss	    dec	    hex	filename
-  21412	     92	  20892	  42396	   a59c	04_Mutex_Data_Consistency.elf
-Finished building: default.size.stdout
- 
+arm-none-eabi-gcc "../Core/Src/mutex_sync.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/mutex_sync.d" -MT"Core/Src/mutex_sync.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mutex_sync.o"
+../Core/Src/mutex_sync.c: In function 'Read_Task':
+../Core/Src/mutex_sync.c:42:13: warning: implicit declaration of function 'HAL_UART_Transmit' [-Wimplicit-function-declaration]
+   42 |             HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
+      |             ^~~~~~~~~~~~~~~~~
+../Core/Src/mutex_sync.c:42:32: error: 'huart2' undeclared (first use in this function)
+   42 |             HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
+      |                                ^~~~~~
+../Core/Src/mutex_sync.c:42:32: note: each undeclared identifier is reported only once for each function it appears in
+../Core/Src/mutex_sync.c:42:56: warning: implicit declaration of function 'strlen' [-Wimplicit-function-declaration]
+   42 |             HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
+      |                                                        ^~~~~~
+../Core/Src/mutex_sync.c:2:1: note: include '<string.h>' or provide a declaration of 'strlen'
+    1 | #include <mutex_sync.h>
+  +++ |+#include <string.h>
+    2 | 
+../Core/Src/mutex_sync.c:42:56: warning: incompatible implicit declaration of built-in function 'strlen' [-Wbuiltin-declaration-mismatch]
+   42 |             HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
+      |                                                        ^~~~~~
+../Core/Src/mutex_sync.c:42:56: note: include '<string.h>' or provide a declaration of 'strlen'
+make: *** [Core/Src/subdir.mk:43: Core/Src/mutex_sync.o] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
 
-16:21:22 Build Finished. 0 errors, 0 warnings. (took 132ms)
+09:46:14 Build Failed. 2 errors, 3 warnings. (took 173ms)
 
