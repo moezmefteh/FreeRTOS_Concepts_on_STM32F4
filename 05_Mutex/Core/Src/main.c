@@ -58,11 +58,6 @@ const osThreadAttr_t decrementTaskAttributes = {
     .priority = osPriorityBelowNormal,
 };
 
-const osThreadAttr_t readTaskAttributes = {
-    .name = "Read_Task",
-    .stack_size = 128 * 4,
-    .priority = osPriorityAboveNormal,
-};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,7 +67,6 @@ static void MX_USART2_UART_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
-void Read_Task(void *argument);
 void Decrement_Task(void *argument);
 void Increment_Task(void *argument);
 
@@ -151,7 +145,6 @@ int main(void)
   // Task Creation
   osThreadNew(Increment_Task, NULL, &incrementTaskAttributes);
   osThreadNew(Decrement_Task, NULL, &decrementTaskAttributes);
-  osThreadNew(Read_Task, NULL, &readTaskAttributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -287,6 +280,9 @@ void Increment_Task(void *argument)
         if (osMutexAcquire(counterMutex, osWaitForever) == osOK)
         {
             counter++;
+        	char msg[10];
+        	sprintf(msg, "%d", counter);
+        	HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
             osMutexRelease(counterMutex);
             osDelay(500);
         }
@@ -300,22 +296,9 @@ void Decrement_Task(void *argument)
         if (osMutexAcquire(counterMutex, osWaitForever) == osOK)
         {
             counter--;
-            osMutexRelease(counterMutex);
-            osDelay(500);
-        }
-    }
-}
-
-void Read_Task(void *argument)
-{
-    while (1)
-    {
-        if (osMutexAcquire(counterMutex, osWaitForever) == osOK)
-        {
         	char msg[10];
         	sprintf(msg, "%d", counter);
         	HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
-
             osMutexRelease(counterMutex);
             osDelay(500);
         }
